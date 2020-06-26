@@ -3,7 +3,7 @@
 
 Proyecto realizado con la librería de JavaScript Leafleft, utilizando los datos proporcionados por la Universidad John Jenkins, sobre la pandemia COVID-19
 
-Api del proyecto: https://alfredobp.github.io/covidmap/
+Url despliegue del proyecto: https://alfredobp.github.io/covidmap/
 
 
 Alfredo Barragán Pedrote
