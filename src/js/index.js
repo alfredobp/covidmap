@@ -1,10 +1,5 @@
 var cities = L.layerGroup();
 
-// L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities),
-//     L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities),
-//     L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities),
-//     L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
-
 
 function getRadius(r) {
     return r >= 100000 ? 25 :
@@ -20,7 +15,25 @@ var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStree
     mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
 var grayscale = L.tileLayer(mbUrl, { id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
-    streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
+    streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
+    googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }), googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }),
+    arcgis = L.tileLayer(
+        'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+
+        maxZoom: 18,
+    });
+
+
 
 var map = L.map('map', {
     center: [38.97, -5.80],
@@ -32,22 +45,28 @@ var map = L.map('map', {
 
 var baseLayers = {
     "Streets": streets,
-    "Grayscale": grayscale
-    
+    "Grayscale": grayscale,
+    "Google streets": googleStreets,
+    "Google hydrid": googleHybrid,
+    "Google satellite": googleSat,
+    "Esri": arcgis,
+
+
 };
 
 var overlays = {
-    "Datos covid-19": cities
+    "Datos covid-19": cities,
+
+
 };
 
-L.control.layers(baseLayers, overlays).addTo(map);
 
 function popup_covid(feature, layer) {
     layer.bindPopup("<div style=text-align:center><h3>" + feature.properties.denominacion +
-        "<h3></div><hr><table><tr><td>Tipo de equipamiento: " + feature.properties.tipo_equipamiento +
-        "</td></tr><tr><td>Dirección: " + feature.properties.ubicacion +
-        "</td></tr><tr><td>Recovered: " + feature.properties.id +
-        "</td></tr></table>", {
+    "<h3></div><hr><table><tr><td>Tipo de equipamiento: " + feature.properties.tipo_equipamiento +
+    "</td></tr><tr><td>Dirección: " + feature.properties.ubicacion +
+    "</td></tr><tr><td>Recovered: " + feature.properties.id +
+    "</td></tr></table>", {
         minWidth: 150,
         maxWidth: 200
     });
@@ -64,6 +83,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.Datos: Universidad Johns Hopkins (JHU)',
 }).addTo(map);
 
+L.control.layers(baseLayers, overlays).addTo(map);
 var customIcon = new L.Icon({
     iconUrl: 'https://image.flaticon.com/icons/svg/2904/2904131.svg',
     iconSize: [25, 20],
@@ -120,14 +140,13 @@ fetch(geojson_url)
             map.fitBund
         }
     )
-    var title = L.control();
-	 
-	title.onAdd = function (map) {
-		var div = L.DomUtil.create('div', 'info');
-		    div.innerHTML +=
-		    '<h2>COVID-19</h2>Grado de incidencia por país.';
-		 return div;
-	};
-	 
-    title.addTo(map);
-    
+var title = L.control();
+
+title.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info');
+    div.innerHTML +=
+        '<h2>COVID-19</h2>Grado de incidencia por país.';
+    return div;
+};
+
+title.addTo(map);
