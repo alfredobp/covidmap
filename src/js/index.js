@@ -63,10 +63,10 @@ var overlays = {
 
 function popup_covid(feature, layer) {
     layer.bindPopup("<div style=text-align:center><h3>" + feature.properties.denominacion +
-    "<h3></div><hr><table><tr><td>Tipo de equipamiento: " + feature.properties.tipo_equipamiento +
-    "</td></tr><tr><td>Dirección: " + feature.properties.ubicacion +
-    "</td></tr><tr><td>Recovered: " + feature.properties.id +
-    "</td></tr></table>", {
+        "<h3></div><hr><table><tr><td>Tipo de equipamiento: " + feature.properties.tipo_equipamiento +
+        "</td></tr><tr><td>Dirección: " + feature.properties.ubicacion +
+        "</td></tr><tr><td>Recovered: " + feature.properties.id +
+        "</td></tr></table>", {
         minWidth: 150,
         maxWidth: 200
     });
@@ -80,7 +80,7 @@ var MarkerOptions = {
     fillOpacity: 0.8
 };
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.Datos: Universidad Johns Hopkins (JHU)',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors. Datos: Universidad Johns Hopkins (JHU)',
 }).addTo(map);
 
 L.control.layers(baseLayers, overlays).addTo(map);
@@ -99,8 +99,9 @@ legend.onAdd = function (map) {
 
     for (var i = 0; i < grades.length; i++) {
         var grade = grades[i];//*0.5;
+        console.log( Math.max( -(7 - 8.2 * getRadius(grade)))/6);
         labels.push(
-            '<i class="circlepadding" style="width: ' + Math.max(8, (7 - 2.2 * getRadius(grade))) + 'px;"></i> <i style="background: #FF4000; width: ' + getRadius(grade) * 2 + 'px; height: ' + getRadius(grade) * 2 + 'px; border-radius: 50%; margin-top: ' + Math.max(0, (9 - getRadius(grade))) + 'px;"></i><i class="circlepadding" style="width: ' + Math.max(2, (25 - 2 * getRadius(grade))) + 'px;"></i> ' + categories[i]);
+            '<img class="circlepadding" src="https://image.flaticon.com/icons/svg/2904/2904131.svg" style="width: ' + Math.max( -(7 - 8.2 * getRadius(grade)))/7 + 'px;"></img> ' + categories[i]);
     }
     div.innerHTML = labels.join('<br>');
     return div;
@@ -124,11 +125,16 @@ fetch(geojson_url)
                 onEachFeature: popup_covid
             }).addTo(map)
             for (let index = 0; index < data.length; index++) {
+                var customIcon = new L.Icon({
+                    iconUrl: 'https://image.flaticon.com/icons/svg/2904/2904131.svg',
+                    iconSize: getRadius(data[index].confirmed),
+                    // iconAnchor: [25, 50]
+                });
                 L.marker([data[index].location.lat, data[index].location.lng], { icon: customIcon }, { MarkerOptions: MarkerOptions }).bindPopup("<div class='' style=text-align:center><h3> País: " + data[index].countryregion + "</div>" +
                     "<hr><table><tr><td>Infectados: " + data[index].confirmed +
-                    "<tr><td>Fallecidos: " + data[index].deaths +
+                    "<tr><td>Fallecidos: " + data[index].deaths+
                     "</td></tr><tr><td>Recuperados: " + data[index].recovered +
-                    "</td></tr><tr><td>Actualizado el: " + data[index].lastupdate +
+                    "</td></tr><tr><td>Actualizado el: " + new Date( data[index].lastupdate).toLocaleDateString('ES') +
                     "</td></tr></table>", {
                     minWidth: 150,
                     maxWidth: 200
