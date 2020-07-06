@@ -4,9 +4,9 @@ var cities = L.layerGroup();
 function getRadius(r) {
     return r >= 100000 ? 25 :
         r >= 10000 ? 15 :
-            r >= 5000 ? 7 :
-                r >= 1000 ? 3 :
-                    3;
+        r >= 5000 ? 9 :
+        r >= 1000 ? 7 :
+        7;
 };
 
 var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -23,15 +23,16 @@ var grayscale = L.tileLayer(mbUrl, { id: 'mapbox/light-v9', tileSize: 512, zoomO
     googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }), googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    }),
+    googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     }),
     arcgis = L.tileLayer(
         'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 
-        maxZoom: 18,
-    });
+            maxZoom: 18,
+        });
 
 
 
@@ -67,9 +68,9 @@ function popup_covid(feature, layer) {
         "</td></tr><tr><td>Dirección: " + feature.properties.ubicacion +
         "</td></tr><tr><td>Recovered: " + feature.properties.id +
         "</td></tr></table>", {
-        minWidth: 150,
-        maxWidth: 200
-    });
+            minWidth: 150,
+            maxWidth: 200
+        });
 };
 
 var MarkerOptions = {
@@ -89,8 +90,8 @@ var customIcon = new L.Icon({
     iconSize: [25, 20],
     iconAnchor: [25, 50]
 });
-var leyenda = L.control({ position: 'bottomright' });
-leyenda.onAdd = function (map) {
+var legend = L.control({ position: 'bottomright' });
+legend.onAdd = function(map) {
 
     var div = L.DomUtil.create('div', 'info leyenda');
     var grades = [1000, 5000, 10000, 100000];
@@ -98,7 +99,7 @@ leyenda.onAdd = function (map) {
     var categories = ['< 5000', '5000-10000', '10000-100000', '>100000'];
 
     for (var i = 0; i < grades.length; i++) {
-        var grade = grades[i];//*0.5;
+        var grade = grades[i]; //*0.5;
         console.log(Math.max(-(7 - 8.2 * getRadius(grade))) / 6);
         labels.push(
             '<img class="circlepadding" src="https://image.flaticon.com/icons/svg/2904/2904131.svg" style="width: ' + Math.max(-(7 - 8.2 * getRadius(grade))) / 7 + 'px;"></img> ' + categories[i]);
@@ -111,7 +112,7 @@ leyenda.addTo(map);
 let geojson_url = "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest";
 
 fetch(geojson_url)
-    .then(function (response) {
+    .then(function(response) {
         console.log(response)
         return response.json();
     })
@@ -119,12 +120,13 @@ fetch(geojson_url)
         data => {
             console.log(data)
             L.geoJson(data, {
-                pointToLayer: function (feature, latlng) {
+                pointToLayer: function(feature, latlng) {
                     return L.marker(MarkerOptions, { icon: customIcon }, { icon: customIcon });
                 },
                 onEachFeature: popup_covid
             }).addTo(map)
             for (let index = 0; index < data.length; index++) {
+                console.log(getRadius(data[index].confirmed));
                 var customIcon = new L.Icon({
                     iconUrl: 'https://image.flaticon.com/icons/svg/2904/2904131.svg',
                     iconSize: getRadius(data[index].confirmed),
@@ -136,9 +138,9 @@ fetch(geojson_url)
                     "</td></tr><tr><td>Recuperados: " + data[index].recovered +
                     "</td></tr><tr><td>Actualizado el: " + new Date(data[index].lastupdate).toLocaleDateString('ES') +
                     "</td></tr></table>", {
-                    minWidth: 150,
-                    maxWidth: 200
-                }).addTo(map);
+                        minWidth: 150,
+                        maxWidth: 200
+                    }).addTo(map);
 
 
             }
@@ -148,7 +150,7 @@ fetch(geojson_url)
     )
 var title = L.control();
 
-title.onAdd = function (map) {
+title.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'info');
     div.innerHTML +=
         '<h2>COVID-19</h2>Grado de incidencia por país.';
