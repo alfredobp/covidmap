@@ -22,13 +22,13 @@
             
         }
         
-        .legend {
+        .leyenda {
             line-height: 35px;
             padding: 7px;
             color: #555;
         }
         
-        .legend i {
+        .leyenda i {
             width: 15px;
             height: 15px;
             float: left;
@@ -42,14 +42,14 @@
             border-radius: 50%;
         }
         
-        .legend .colorcircle {
+        .leyenda .colorcircle {
             border-radius: 50%;
             width: 15px;
             height: 15px;
             margin-top: 0px;
         }
         
-        .legend .circlepadding {
+        .leyenda .circlepadding {
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.85);
           

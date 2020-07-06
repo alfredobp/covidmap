@@ -89,24 +89,24 @@ var customIcon = new L.Icon({
     iconSize: [25, 20],
     iconAnchor: [25, 50]
 });
-var legend = L.control({ position: 'bottomright' });
-legend.onAdd = function (map) {
+var leyenda = L.control({ position: 'bottomright' });
+leyenda.onAdd = function (map) {
 
-    var div = L.DomUtil.create('div', 'info legend');
+    var div = L.DomUtil.create('div', 'info leyenda');
     var grades = [1000, 5000, 10000, 100000];
     var labels = ['<strong>Número de afectados</strong>'];
     var categories = ['< 5000', '5000-10000', '10000-100000', '>100000'];
 
     for (var i = 0; i < grades.length; i++) {
         var grade = grades[i];//*0.5;
-        console.log( Math.max( -(7 - 8.2 * getRadius(grade)))/6);
+        console.log(Math.max(-(7 - 8.2 * getRadius(grade))) / 6);
         labels.push(
-            '<img class="circlepadding" src="https://image.flaticon.com/icons/svg/2904/2904131.svg" style="width: ' + Math.max( -(7 - 8.2 * getRadius(grade)))/7 + 'px;"></img> ' + categories[i]);
+            '<img class="circlepadding" src="https://image.flaticon.com/icons/svg/2904/2904131.svg" style="width: ' + Math.max(-(7 - 8.2 * getRadius(grade))) / 7 + 'px;"></img> ' + categories[i]);
     }
     div.innerHTML = labels.join('<br>');
     return div;
 };
-legend.addTo(map);
+leyenda.addTo(map);
 
 let geojson_url = "https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest";
 
@@ -132,9 +132,9 @@ fetch(geojson_url)
                 });
                 L.marker([data[index].location.lat, data[index].location.lng], { icon: customIcon }, { MarkerOptions: MarkerOptions }).bindPopup("<div class='' style=text-align:center><h3> País: " + data[index].countryregion + "</div>" +
                     "<hr><table><tr><td>Infectados: " + data[index].confirmed +
-                    "<tr><td>Fallecidos: " + data[index].deaths+
+                    "<tr><td>Fallecidos: " + data[index].deaths +
                     "</td></tr><tr><td>Recuperados: " + data[index].recovered +
-                    "</td></tr><tr><td>Actualizado el: " + new Date( data[index].lastupdate).toLocaleDateString('ES') +
+                    "</td></tr><tr><td>Actualizado el: " + new Date(data[index].lastupdate).toLocaleDateString('ES') +
                     "</td></tr></table>", {
                     minWidth: 150,
                     maxWidth: 200
