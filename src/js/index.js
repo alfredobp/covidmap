@@ -90,8 +90,8 @@ var customIcon = new L.Icon({
     iconSize: [25, 20],
     iconAnchor: [25, 50]
 });
-var legend = L.control({ position: 'bottomright' });
-legend.onAdd = function(map) {
+var leyenda = L.control({ position: 'bottomright' });
+leyenda.onAdd = function(map) {
 
     var div = L.DomUtil.create('div', 'info leyenda');
     var grades = [1000, 5000, 10000, 100000];
